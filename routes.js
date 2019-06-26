@@ -20,6 +20,7 @@ router.get('/movies', (req, res) => {
   };
   dynamoDb.scan(params, (error, result) => {
     if (error) {
+      console.log(error)
       res.status(400).json({ error: 'Error fetching the movies' });
     }
     res.json(result.Items);
@@ -49,8 +50,12 @@ router.get('/movies/:id', (req, res) => {
 });
 
 router.post('/movies', (req, res) => {
-  const name = req.body.name;
-  const id = uuid.v4();
+  const MovieId = uuid.v4();
+  const Title = req.body.Title;
+  const Format = req.body.Format;
+  const Length = req.body.Length;
+  const ReleaseYear = req.body.ReleaseYear;
+  const Rating = req.body.Rating;
 
   const params = {
     TableName: DYNAMODB_TABLE,
@@ -69,8 +74,12 @@ router.post('/movies', (req, res) => {
       res.status(400).json({ error: 'Could not create Movie' });
     }
     res.json({
-      id,
-      name
+      MovieId,
+      Title,
+      Format,
+      Length,
+      ReleaseYear,
+      Rating
     });
   });
 });

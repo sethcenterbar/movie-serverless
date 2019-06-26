@@ -10,7 +10,7 @@
     "build": "zip -r build.zip node_modules index.js app.js routes.js",
     "dynamodb-local-run": "docker-compose up",
     "create-database": "aws dynamodb create-table --cli-input-json file://Movies-table-model.json --endpoint-url http://localhost:8080",
-    "start": "TABLE='employees' node app-local"
+    "start": "TABLE='Movies' node app-local"
   },
   "author": "",
   "license": "ISC",
