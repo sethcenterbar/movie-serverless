@@ -20,19 +20,20 @@ router.get('/movies', (req, res) => {
   };
   dynamoDb.scan(params, (error, result) => {
     if (error) {
+      console.log(error)
       res.status(400).json({ error: 'Error fetching the movies' });
     }
     res.json(result.Items);
   });
 });
 
-router.get('/movies/:id', (req, res) => {
-  const id = req.params.id;
+router.get('/movies/:MovieId', (req, res) => {
+  const MovieId = req.params.MovieId;
 
   const params = {
     TableName: DYNAMODB_TABLE,
     Key: {
-      id
+      MovieId
     }
   };
 
@@ -43,14 +44,18 @@ router.get('/movies/:id', (req, res) => {
     if (result.Item) {
       res.json(result.Item);
     } else {
-      res.status(404).json({ error: `Movie with id: ${id} not found` });
+      res.status(404).json({ error: `Movie with MovieId: ${MovieId} not found` });
     }
   });
 });
 
 router.post('/movies', (req, res) => {
-  const name = req.body.name;
-  const id = uuid.v4();
+  const MovieId = uuid.v4();
+  const Title = req.body.Title;
+  const Format = req.body.Format;
+  const Length = req.body.Length;
+  const ReleaseYear = req.body.ReleaseYear;
+  const Rating = req.body.Rating;
 
   const params = {
     TableName: DYNAMODB_TABLE,
@@ -69,19 +74,23 @@ router.post('/movies', (req, res) => {
       res.status(400).json({ error: 'Could not create Movie' });
     }
     res.json({
-      id,
-      name
+      MovieId,
+      Title,
+      Format,
+      Length,
+      ReleaseYear,
+      Rating
     });
   });
 });
 
-router.delete('/movies/:id', (req, res) => {
-  const id = req.params.id;
+router.delete('/movies/:MovieId', (req, res) => {
+  const MovieId = req.params.MovieId;
 
   const params = {
     TableName: DYNAMODB_TABLE,
     Key: {
-      id
+      MovieId
     }
   };
 
@@ -94,17 +103,23 @@ router.delete('/movies/:id', (req, res) => {
 });
 
 router.put('/movies', (req, res) => {
-  const id = req.body.id;
-  const name = req.body.name;
+
+  const MovieId = req.body.MovieId;
+  const Title = req.body.Title;
+  const Format = req.body.Format;
+  const Length = req.body.Length;
+  const ReleaseYear = req.body.ReleaseYear;
+  const Rating = req.body.Rating;
 
   const params = {
     TableName: DYNAMODB_TABLE,
     Key: {
-      id
+      MovieId
     },
-    UpdateExpression: 'set #name = :name',
-    ExpressionAttributeNames: { '#name': 'name' },
-    ExpressionAttributeValues: { ':name': name },
+    UpdateExpression: 'set #Title = :Title, #Format = :Format, #Length = :Length, #ReleaseYear = :ReleaseYear, #Rating = :Rating',
+    ExpressionAttributeNames: { '#Title': 'Title', '#Format': 'Format', '#Length': 'Length', '#ReleaseYear': 'ReleaseYear', '#Rating': 'Rating' },
+    ExpressionAttributeValues: { ':Title': Title, ':Format': Format, ':Length': Length, ':ReleaseYear': ReleaseYear, ':Rating': Rating },
+
     ReturnValues: "ALL_NEW"
   }
 
