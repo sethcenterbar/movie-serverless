@@ -103,13 +103,13 @@ router.delete('/movies/:MovieId', (req, res) => {
 });
 
 router.put('/movies', (req, res) => {
+
   const MovieId = req.body.MovieId;
   const Title = req.body.Title;
   const Format = req.body.Format;
   const Length = req.body.Length;
   const ReleaseYear = req.body.ReleaseYear;
   const Rating = req.body.Rating;
-
 
   const params = {
     TableName: DYNAMODB_TABLE,
@@ -119,6 +119,7 @@ router.put('/movies', (req, res) => {
     UpdateExpression: 'set #Title = :Title, #Format = :Format, #Length = :Length, #ReleaseYear = :ReleaseYear, #Rating = :Rating',
     ExpressionAttributeNames: { '#Title': 'Title', '#Format': 'Format', '#Length': 'Length', '#ReleaseYear': 'ReleaseYear', '#Rating': 'Rating' },
     ExpressionAttributeValues: { ':Title': Title, ':Format': Format, ':Length': Length, ':ReleaseYear': ReleaseYear, ':Rating': Rating },
+
     ReturnValues: "ALL_NEW"
   }
 
