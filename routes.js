@@ -27,13 +27,13 @@ router.get('/movies', (req, res) => {
   });
 });
 
-router.get('/movies/:id', (req, res) => {
-  const id = req.params.id;
+router.get('/movies/:MovieId', (req, res) => {
+  const MovieId = req.params.MovieId;
 
   const params = {
     TableName: DYNAMODB_TABLE,
     Key: {
-      id
+      MovieId
     }
   };
 
@@ -44,7 +44,7 @@ router.get('/movies/:id', (req, res) => {
     if (result.Item) {
       res.json(result.Item);
     } else {
-      res.status(404).json({ error: `Movie with id: ${id} not found` });
+      res.status(404).json({ error: `Movie with MovieId: ${MovieId} not found` });
     }
   });
 });
@@ -84,13 +84,13 @@ router.post('/movies', (req, res) => {
   });
 });
 
-router.delete('/movies/:id', (req, res) => {
-  const id = req.params.id;
+router.delete('/movies/:MovieId', (req, res) => {
+  const MovieId = req.params.MovieId;
 
   const params = {
     TableName: DYNAMODB_TABLE,
     Key: {
-      id
+      MovieId
     }
   };
 
@@ -103,17 +103,22 @@ router.delete('/movies/:id', (req, res) => {
 });
 
 router.put('/movies', (req, res) => {
-  const id = req.body.id;
-  const name = req.body.name;
+  const MovieId = req.body.MovieId;
+  const Title = req.body.Title;
+  const Format = req.body.Format;
+  const Length = req.body.Length;
+  const ReleaseYear = req.body.ReleaseYear;
+  const Rating = req.body.Rating;
+
 
   const params = {
     TableName: DYNAMODB_TABLE,
     Key: {
-      id
+      MovieId
     },
-    UpdateExpression: 'set #name = :name',
-    ExpressionAttributeNames: { '#name': 'name' },
-    ExpressionAttributeValues: { ':name': name },
+    UpdateExpression: 'set #Title = :Title, #Format = :Format, #Length = :Length, #ReleaseYear = :ReleaseYear, #Rating = :Rating',
+    ExpressionAttributeNames: { '#Title': 'Title', '#Format': 'Format', '#Length': 'Length', '#ReleaseYear': 'ReleaseYear', '#Rating': 'Rating' },
+    ExpressionAttributeValues: { ':Title': Title, ':Format': Format, ':Length': Length, ':ReleaseYear': ReleaseYear, ':Rating': Rating },
     ReturnValues: "ALL_NEW"
   }
 
